@@ -3,8 +3,8 @@
 // Configure your Supabase project credentials below
 // ================================================================
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://dzxqfvmbgywxdxdlpueg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eHFmdm1iZ3l3eGR4ZGxwdWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjAxNDIsImV4cCI6MjA5NjgzNjE0Mn0.LWtnlQXueA7ZkBsEjvq1qstgfUc0qhtRamTPoAqgGno';
 
 let _sb;
 try {
