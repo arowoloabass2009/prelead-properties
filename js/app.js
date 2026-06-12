@@ -1,4 +1,3 @@
-"use strict";
 // ================================================================
 // PRELEAD PROPERTIES — TypeScript Application Core  v1.0
 // World-Class Real Estate Platform
@@ -18,19 +17,22 @@ const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 // ─────────────────── Navbar ──────────────────────────────────
 class Navbar {
     constructor() {
+        var _a, _b;
         this.nav = document.querySelector('.navbar');
         this.hamburger = document.querySelector('.hamburger');
         this.navLinks = document.querySelector('.navbar-nav');
         this.navActions = document.querySelector('.navbar-actions');
-        this.isTransparent = this.nav?.classList.contains('transparent') ?? false;
+        this.isTransparent = (_b = (_a = this.nav) === null || _a === void 0 ? void 0 : _a.classList.contains('transparent')) !== null && _b !== void 0 ? _b : false;
         this.init();
     }
     init() {
+        var _a;
         window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
-        this.hamburger?.addEventListener('click', this.toggleMenu.bind(this));
+        (_a = this.hamburger) === null || _a === void 0 ? void 0 : _a.addEventListener('click', this.toggleMenu.bind(this));
         this.setActiveLink();
         document.addEventListener('click', (e) => {
-            if (!e.target?.closest('.navbar'))
+            var _a;
+            if (!((_a = e.target) === null || _a === void 0 ? void 0 : _a.closest('.navbar')))
                 this.closeMenu();
         });
         this.handleScroll();
@@ -53,17 +55,20 @@ class Navbar {
         }
     }
     toggleMenu() {
-        this.navLinks?.classList.toggle('open');
-        this.navActions?.classList.toggle('open');
+        var _a, _b;
+        (_a = this.navLinks) === null || _a === void 0 ? void 0 : _a.classList.toggle('open');
+        (_b = this.navActions) === null || _b === void 0 ? void 0 : _b.classList.toggle('open');
     }
     closeMenu() {
-        this.navLinks?.classList.remove('open');
-        this.navActions?.classList.remove('open');
+        var _a, _b;
+        (_a = this.navLinks) === null || _a === void 0 ? void 0 : _a.classList.remove('open');
+        (_b = this.navActions) === null || _b === void 0 ? void 0 : _b.classList.remove('open');
     }
     setActiveLink() {
         const current = window.location.pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('.nav-link').forEach(link => {
-            const href = link.getAttribute('href') ?? '';
+            var _a;
+            const href = (_a = link.getAttribute('href')) !== null && _a !== void 0 ? _a : '';
             if (href === current || (current === '' && href === 'index.html')) {
                 link.classList.add('active');
             }
@@ -108,8 +113,9 @@ class FormValidator {
     static validate(form) {
         const errors = {};
         form.querySelectorAll('[data-validate]').forEach(el => {
-            const rules = (el.dataset['validate'] ?? '').split('|');
-            const label = el.dataset['label'] ?? el.name ?? 'Field';
+            var _a, _b, _c;
+            const rules = ((_a = el.dataset['validate']) !== null && _a !== void 0 ? _a : '').split('|');
+            const label = (_c = (_b = el.dataset['label']) !== null && _b !== void 0 ? _b : el.name) !== null && _c !== void 0 ? _c : 'Field';
             const value = el.value;
             rules.forEach(rule => {
                 if (rule === 'required' && !this.validateRequired(value))
@@ -125,9 +131,11 @@ class FormValidator {
         return { isValid: Object.keys(errors).length === 0, errors };
     }
     static showErrors(form, errors) {
+        var _a;
         form.querySelectorAll('.field-error').forEach(el => el.remove());
         form.querySelectorAll('.form-control').forEach(el => el.classList.remove('error'));
         Object.entries(errors).forEach(([name, message]) => {
+            var _a, _b;
             const inp = form.querySelector('[name="' + name + '"]');
             if (!inp)
                 return;
@@ -135,13 +143,13 @@ class FormValidator {
             const span = document.createElement('span');
             span.className = 'field-error';
             span.textContent = message;
-            (inp.closest('.input-icon-wrap') ?? inp.parentElement)?.appendChild(span);
+            (_b = ((_a = inp.closest('.input-icon-wrap')) !== null && _a !== void 0 ? _a : inp.parentElement)) === null || _b === void 0 ? void 0 : _b.appendChild(span);
             inp.addEventListener('input', () => {
                 inp.classList.remove('error');
                 span.remove();
             }, { once: true });
         });
-        (form.querySelector('.form-control.error'))?.focus();
+        (_a = (form.querySelector('.form-control.error'))) === null || _a === void 0 ? void 0 : _a.focus();
     }
     static clearErrors(form) {
         form.querySelectorAll('.field-error').forEach(el => el.remove());
@@ -156,6 +164,7 @@ class Toast {
         document.body.appendChild(this.container);
     }
     show(message, type = 'info', duration = 4500) {
+        var _a;
         const icons = {
             success: '✓', error: '✕', info: 'ℹ', warning: '⚠'
         };
@@ -171,7 +180,7 @@ class Toast {
             toast.classList.add('out');
             toast.addEventListener('transitionend', () => toast.remove(), { once: true });
         };
-        toast.querySelector('.toast-close')?.addEventListener('click', close);
+        (_a = toast.querySelector('.toast-close')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', close);
         setTimeout(close, duration);
     }
 }
@@ -195,9 +204,10 @@ class ScrollAnimator {
 }
 // ─────────────────── Counter Animation ───────────────────────
 const animateCounter = (el, target, duration = 2200) => {
+    var _a, _b;
     const t0 = performance.now();
-    const prefix = el.dataset['prefix'] ?? '';
-    const suffix = el.dataset['suffix'] ?? '';
+    const prefix = (_a = el.dataset['prefix']) !== null && _a !== void 0 ? _a : '';
+    const suffix = (_b = el.dataset['suffix']) !== null && _b !== void 0 ? _b : '';
     const useSep = el.dataset['nosep'] === undefined;
     const fmt = (n) => (useSep ? n.toLocaleString() : String(n));
     const tick = (now) => {
@@ -214,8 +224,9 @@ const animateCounter = (el, target, duration = 2200) => {
 // ─────────────────── Wishlist / Saved Properties ─────────────
 class WishlistManager {
     static getIds() {
+        var _a;
         try {
-            return JSON.parse(localStorage.getItem(this.KEY) ?? '[]');
+            return JSON.parse((_a = localStorage.getItem(this.KEY)) !== null && _a !== void 0 ? _a : '[]');
         }
         catch {
             return [];
@@ -278,9 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (counters.length) {
         const co = new IntersectionObserver(entries => {
             entries.forEach(e => {
+                var _a;
                 if (e.isIntersecting) {
                     const el = e.target;
-                    animateCounter(el, parseInt(el.dataset['counter'] ?? '0', 10));
+                    animateCounter(el, parseInt((_a = el.dataset['counter']) !== null && _a !== void 0 ? _a : '0', 10));
                     co.unobserve(el);
                 }
             });
@@ -304,7 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Password visibility toggle
     document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
         btn.addEventListener('click', () => {
-            const targetId = btn.dataset['togglePw'] ?? '';
+            var _a;
+            const targetId = (_a = btn.dataset['togglePw']) !== null && _a !== void 0 ? _a : '';
             const input = document.getElementById(targetId);
             if (!input)
                 return;
@@ -317,7 +330,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wishlist buttons
     WishlistManager.updateUI();
     document.querySelectorAll('[data-wishlist]').forEach(btn => {
-        const id = btn.dataset['wishlist'] ?? '';
+        var _a;
+        const id = (_a = btn.dataset['wishlist']) !== null && _a !== void 0 ? _a : '';
         if (WishlistManager.has(id))
             btn.classList.add('saved');
         btn.addEventListener('click', () => {
@@ -336,4 +350,3 @@ document.addEventListener('DOMContentLoaded', () => {
     g.generateId = generateId;
     g.animateCounter = animateCounter;
 });
-//# sourceMappingURL=app.js.map
