@@ -4,11 +4,13 @@
   "description": "PreLead Properties — World-Class Real Estate Platform",
   "scripts": {
     "dev": "browser-sync start --config bs-config.json",
-    "build": "tsc",
+    "build": "tsc --noEmit false",
     "watch": "tsc --watch"
   },
+  "dependencies": {
+    "typescript": "5.4.5"
+  },
   "devDependencies": {
-    "browser-sync": "^3.0.2",
-    "typescript": "^5.4.5"
+    "browser-sync": "^3.0.2"
   }
 }
