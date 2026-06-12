@@ -1,0 +1,14 @@
+{
+  "name": "prelead-properties",
+  "version": "1.0.0",
+  "description": "PreLead Properties — World-Class Real Estate Platform",
+  "scripts": {
+    "dev": "browser-sync start --config bs-config.json",
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.2",
+    "typescript": "^5.4.5"
+  }
+}

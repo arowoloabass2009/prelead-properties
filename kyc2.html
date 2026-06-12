@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Investment Profile · Step 2 — PreLead Properties</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/kyc.css"/>
+</head>
+<body class="kyc-root">
+
+<nav class="navbar light" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo-mark">🏛</div>
+      <div class="navbar-wordmark">
+        <span class="navbar-wordmark-primary" style="color:var(--midnight);">PreLead Properties</span>
+        <span class="navbar-wordmark-sub">Investment Profile</span>
+      </div>
+    </a>
+    <div style="margin:0 auto;"></div>
+    <div class="navbar-actions">
+      <a href="kyc1.html" class="btn btn-dark btn-sm">← Step 1</a>
+      <button class="btn btn-danger btn-sm" onclick="SupabaseAuth.signOut()">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ PAGE HEADER ═══════════════════════════ -->
+<div class="kyc-page-header">
+  <div class="container kyc-page-header-inner">
+    <div>
+      <span class="badge badge-gold mb-12">Step 2 of 2 — Financial Profile &amp; Property Preferences</span>
+      <h1>Investment Profile</h1>
+      <p class="lead mt-8">
+        Help us match you to the perfect properties. Your financial profile and investment preferences
+        allow our advisers to provide bespoke recommendations tailored to your goals.
+      </p>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="container" style="margin-top:28px;">
+    <div class="kyc-stepper">
+      <div class="kyc-step done">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot done">✓</div>
+          <div class="kyc-step-label">Personal</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector done"></div>
+      <div class="kyc-step done">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot done">✓</div>
+          <div class="kyc-step-label">Address</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector done"></div>
+      <div class="kyc-step done">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot done">✓</div>
+          <div class="kyc-step-label">Identity Doc</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-3"></div>
+      <div class="kyc-step active" id="step-tab-4">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot active" id="sdot-4">4</div>
+          <div class="kyc-step-label" style="color:var(--gold);">Financial</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-4"></div>
+      <div class="kyc-step" id="step-tab-5" style="opacity:.45;">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot" id="sdot-5">5</div>
+          <div class="kyc-step-label">Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ KYC LAYOUT ════════════════════════════ -->
+<div class="kyc-layout container">
+
+  <!-- Sidebar -->
+  <aside class="kyc-sidebar">
+    <div class="kyc-progress-card">
+      <h3>Verification Progress</h3>
+      <div class="kyc-overall-row">
+        <div class="progress-track progress-track-dark" style="flex:1;">
+          <div class="progress-fill" id="kycProgress" style="width:60%;"></div>
+        </div>
+        <span class="kyc-pct" id="kycPct">60%</span>
+      </div>
+      <div class="kyc-steps-list">
+        <div class="kyc-step-item">
+          <div class="kyc-step-item-dot done">✓</div>
+          <div>
+            <div class="kyc-step-item-title">Personal Details</div>
+            <div class="kyc-step-item-sub">Completed in Step 1</div>
+          </div>
+        </div>
+        <div class="kyc-step-item">
+          <div class="kyc-step-item-dot done">✓</div>
+          <div>
+            <div class="kyc-step-item-title">Residential Address</div>
+            <div class="kyc-step-item-sub">Completed in Step 1</div>
+          </div>
+        </div>
+        <div class="kyc-step-item">
+          <div class="kyc-step-item-dot done">✓</div>
+          <div>
+            <div class="kyc-step-item-title">Identity Document</div>
+            <div class="kyc-step-item-sub">Completed in Step 1</div>
+          </div>
+        </div>
+        <div class="kyc-step-item">
+          <div class="kyc-step-item-dot active" id="kdot-4">4</div>
+          <div>
+            <div class="kyc-step-item-title">Financial Profile</div>
+            <div class="kyc-step-item-sub">Income &amp; investment capacity</div>
+          </div>
+        </div>
+        <div class="kyc-step-item">
+          <div class="kyc-step-item-dot pending" id="kdot-5">5</div>
+          <div>
+            <div class="kyc-step-item-title">Review &amp; Submit</div>
+            <div class="kyc-step-item-sub">Confirm and activate account</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kyc-info-card">
+      <h4>💡 Why This Matters</h4>
+      <p>Your financial profile helps us connect you with developers offering the right payment plans,
+        unlock mortgage referral services, and present investment-grade properties that match your portfolio goals.</p>
+      <div class="kyc-trust-badges">
+        <span class="kyc-trust-badge">🔐 Data Encrypted</span>
+        <span class="kyc-trust-badge">🚫 Never Sold</span>
+        <span class="kyc-trust-badge">✅ NDPR Safe</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="kyc-main">
+
+    <!-- ─── Section 4: Financial Profile ─── -->
+    <div class="kyc-section active" id="kyc-s-4">
+      <div class="kyc-section-header">
+        <div class="kyc-section-num">04</div>
+        <div>
+          <h2>Financial Profile</h2>
+          <p>Your income range, employer details and investment capacity. Used solely to facilitate appropriate payment plans and mortgage referrals — never shared without your consent.</p>
+        </div>
+      </div>
+      <div class="kyc-form-card">
+        <form id="kycForm4" novalidate>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Employment Type <span class="req">*</span></label>
+              <select name="employmentType" class="form-control form-select" data-validate="required" data-label="Employment Type">
+                <option value="">Select…</option>
+                <option>Employed (Full-time)</option>
+                <option>Employed (Part-time)</option>
+                <option>Self-employed / Business Owner</option>
+                <option>Civil Servant</option>
+                <option>Military / Paramilitary</option>
+                <option>Retired</option>
+                <option>Diaspora / International</option>
+                <option>Unemployed</option>
+                <option>Student</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Employer / Business Name</label>
+              <input type="text" name="employerName" class="form-control"
+                placeholder="e.g. MTN Nigeria, Self-employed"/>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Annual Income Range <span class="req">*</span></label>
+              <select name="annualIncome" class="form-control form-select" data-validate="required" data-label="Annual Income">
+                <option value="">Select range…</option>
+                <option>Below ₦1,000,000</option>
+                <option>₦1M – ₦5M</option>
+                <option>₦5M – ₦20M</option>
+                <option>₦20M – ₦100M</option>
+                <option>₦100M – ₦500M</option>
+                <option>Above ₦500M</option>
+                <option>Prefer not to disclose</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Source of Funds <span class="req">*</span></label>
+              <select name="sourceOfFunds" class="form-control form-select" data-validate="required" data-label="Source of Funds">
+                <option value="">Select…</option>
+                <option>Salary / Employment Income</option>
+                <option>Business Profit</option>
+                <option>Investment Returns</option>
+                <option>Inheritance / Gift</option>
+                <option>Diaspora Remittance</option>
+                <option>Loan / Mortgage</option>
+                <option>Mixed Sources</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Investment Budget Range <span class="req">*</span></label>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;" id="budgetGrid">
+              <label class="doc-card" onclick="selectBudget(this,'under-10m')">
+                <input type="radio" name="budgetRange" value="under-10m"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🏠</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">Under ₦10M</div>
+                  <div class="doc-card-sub">Starter home</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectBudget(this,'10m-50m')">
+                <input type="radio" name="budgetRange" value="10m-50m"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🏡</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">₦10M – ₦50M</div>
+                  <div class="doc-card-sub">Mid-range</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectBudget(this,'50m-200m')">
+                <input type="radio" name="budgetRange" value="50m-200m"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🏢</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">₦50M – ₦200M</div>
+                  <div class="doc-card-sub">Premium</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectBudget(this,'200m-1b')">
+                <input type="radio" name="budgetRange" value="200m-1b"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🏰</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">₦200M – ₦1B</div>
+                  <div class="doc-card-sub">Luxury</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectBudget(this,'above-1b')">
+                <input type="radio" name="budgetRange" value="above-1b"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🌐</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">Above ₦1B</div>
+                  <div class="doc-card-sub">Ultra-HNW</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectBudget(this,'flexible')">
+                <input type="radio" name="budgetRange" value="flexible"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">📈</div>
+                  <div class="doc-card-label" style="font-size:.76rem;">Flexible</div>
+                  <div class="doc-card-sub">Discuss with adviser</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Preference</label>
+            <select name="paymentPref" class="form-control form-select">
+              <option value="">Select preference…</option>
+              <option>Outright Purchase (Cash)</option>
+              <option>Mortgage (Bank-financed)</option>
+              <option>Developer Instalment Plan (6–24 months)</option>
+              <option>Developer Instalment Plan (25–48 months)</option>
+              <option>Diaspora Deferred Payment</option>
+              <option>Joint Venture / Partnership</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Proof of Funds / Bank Statement <span style="font-weight:400;color:var(--text-soft);">(optional)</span></label>
+            <div class="upload-zone" id="zone-pof" onclick="document.getElementById('filePof').click()">
+              <div style="font-size:2rem;margin-bottom:8px;">💼</div>
+              <p><strong>Click to upload</strong> or drag &amp; drop</p>
+              <small>Bank statement, salary slip or investment statement — PDF, JPG · Max 5MB</small>
+              <div id="prev-pof" class="upload-file-name" style="display:none;"></div>
+            </div>
+            <input type="file" id="filePof" name="proofOfFunds" accept=".jpg,.jpeg,.png,.pdf"
+              style="display:none;"
+              onchange="handleUpload(this,'zone-pof','prev-pof','proof-of-funds','_pofUrl')"/>
+          </div>
+
+          <div class="kyc-nav">
+            <a href="kyc1.html" class="btn btn-white">← Back to Step 1</a>
+            <button type="button" class="btn btn-gold" onclick="nextToReview()">
+              Continue to Review →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── Section 5: Property Preferences + Review ─── -->
+    <div class="kyc-section" id="kyc-s-5">
+      <div class="kyc-section-header">
+        <div class="kyc-section-num">05</div>
+        <div>
+          <h2>Property Preferences &amp; Review</h2>
+          <p>Select the property types you're interested in, then review your full profile before final submission.</p>
+        </div>
+      </div>
+      <div class="kyc-form-card">
+        <form id="kycForm5" novalidate>
+
+          <!-- Property Interests -->
+          <div class="form-group">
+            <label class="form-label">Property Types of Interest <span class="req">*</span></label>
+            <p class="form-hint">Select all that apply — we'll tailor your property feed accordingly.</p>
+            <div class="pref-grid mt-8">
+              <label class="pref-card" onclick="togglePref(this,'domestic')">
+                <input type="checkbox" name="pref_domestic" value="domestic"/>
+                <div class="pref-card-icon">🏠</div>
+                <div class="pref-card-label">Domestic</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'commercial')">
+                <input type="checkbox" name="pref_commercial" value="commercial"/>
+                <div class="pref-card-icon">🏢</div>
+                <div class="pref-card-label">Commercial</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'multipurpose')">
+                <input type="checkbox" name="pref_multipurpose" value="multipurpose"/>
+                <div class="pref-card-icon">🎪</div>
+                <div class="pref-card-label">Multipurpose</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'multinational')">
+                <input type="checkbox" name="pref_multinational" value="multinational"/>
+                <div class="pref-card-icon">🌐</div>
+                <div class="pref-card-label">Multinational</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'plaza')">
+                <input type="checkbox" name="pref_plaza" value="plaza"/>
+                <div class="pref-card-icon">🏬</div>
+                <div class="pref-card-label">Plaza</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'mooreland')">
+                <input type="checkbox" name="pref_mooreland" value="mooreland"/>
+                <div class="pref-card-icon">🌊</div>
+                <div class="pref-card-label">Mooreland</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'industrial')">
+                <input type="checkbox" name="pref_industrial" value="industrial"/>
+                <div class="pref-card-icon">🏭</div>
+                <div class="pref-card-label">Industrial</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'land')">
+                <input type="checkbox" name="pref_land" value="land"/>
+                <div class="pref-card-icon">🌳</div>
+                <div class="pref-card-label">Land/Plot</div>
+              </label>
+              <label class="pref-card" onclick="togglePref(this,'off-plan')">
+                <input type="checkbox" name="pref_offplan" value="off-plan"/>
+                <div class="pref-card-icon">📐</div>
+                <div class="pref-card-label">Off-Plan</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Purpose of Investment</label>
+            <select name="investmentPurpose" class="form-control form-select">
+              <option value="">Select purpose…</option>
+              <option>Primary Residence</option>
+              <option>Rental Income</option>
+              <option>Capital Appreciation</option>
+              <option>Business Operations</option>
+              <option>Portfolio Diversification</option>
+              <option>Family Legacy</option>
+              <option>Diaspora Investment</option>
+            </select>
+          </div>
+
+          <!-- Review Summary -->
+          <div style="background:var(--bg-alt);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:24px;margin-bottom:28px;">
+            <div style="font-family:var(--font-serif);font-size:1rem;font-weight:600;color:var(--midnight);margin-bottom:16px;">
+              Profile Review
+            </div>
+            <div class="kyc-review-grid" id="reviewGrid">
+              <div class="review-block">
+                <div class="review-block-head">
+                  <h4>Personal</h4>
+                  <a href="kyc1.html" style="font-size:.76rem;color:var(--gold-muted);font-weight:700;">Edit</a>
+                </div>
+                <div class="review-pairs" id="reviewPersonal">
+                  <div class="review-pair"><span class="lbl">Full Name</span><span class="val" id="rv-name">—</span></div>
+                  <div class="review-pair"><span class="lbl">Date of Birth</span><span class="val" id="rv-dob">—</span></div>
+                  <div class="review-pair"><span class="lbl">Nationality</span><span class="val" id="rv-nat">—</span></div>
+                  <div class="review-pair"><span class="lbl">Occupation</span><span class="val" id="rv-occ">—</span></div>
+                </div>
+              </div>
+              <div class="review-block">
+                <div class="review-block-head">
+                  <h4>Address</h4>
+                  <a href="kyc1.html" style="font-size:.76rem;color:var(--gold-muted);font-weight:700;">Edit</a>
+                </div>
+                <div class="review-pairs" id="reviewAddress">
+                  <div class="review-pair"><span class="lbl">State</span><span class="val" id="rv-state">—</span></div>
+                  <div class="review-pair"><span class="lbl">City</span><span class="val" id="rv-city">—</span></div>
+                  <div class="review-pair"><span class="lbl">Housing</span><span class="val" id="rv-housing">—</span></div>
+                </div>
+              </div>
+              <div class="review-block">
+                <div class="review-block-head">
+                  <h4>Identity</h4>
+                  <a href="kyc1.html" style="font-size:.76rem;color:var(--gold-muted);font-weight:700;">Edit</a>
+                </div>
+                <div class="review-pairs">
+                  <div class="review-pair"><span class="lbl">ID Type</span><span class="val" id="rv-idtype">—</span></div>
+                  <div class="review-pair"><span class="lbl">ID Number</span><span class="val" id="rv-idnum">—</span></div>
+                </div>
+              </div>
+              <div class="review-block">
+                <div class="review-block-head">
+                  <h4>Financial</h4>
+                  <span></span>
+                </div>
+                <div class="review-pairs">
+                  <div class="review-pair"><span class="lbl">Employment</span><span class="val" id="rv-emp">—</span></div>
+                  <div class="review-pair"><span class="lbl">Annual Income</span><span class="val" id="rv-income">—</span></div>
+                  <div class="review-pair"><span class="lbl">Budget Range</span><span class="val" id="rv-budget">—</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:28px;">
+            <label class="check-label">
+              <input type="checkbox" id="kycConsent"/>
+              <span>
+                I confirm that all information provided is accurate and truthful. I consent to PreLead Properties
+                verifying my details with relevant government databases for KYC compliance under NDPR and FETCAN regulations.
+              </span>
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-gold w-full btn-lg" onclick="submitKyc()" id="submitBtn">
+            Submit for Verification
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── Success State ─── -->
+    <div class="kyc-section" id="kyc-s-success">
+      <div class="kyc-success">
+        <div class="kyc-success-icon">🏆</div>
+        <h2>Verification Submitted!</h2>
+        <p>
+          Your identity and investment profile has been submitted for review by our compliance team.
+          You'll receive a confirmation email within <strong>24–48 hours</strong>.
+          Meanwhile, you can browse properties and add them to your watchlist.
+        </p>
+
+        <div class="kyc-timeline">
+          <div class="kyc-tl-step done">
+            <div class="kyc-tl-dot">✓</div>
+            <div class="kyc-tl-lbl">Profile<br/>Submitted</div>
+          </div>
+          <div class="kyc-tl-step">
+            <div class="kyc-tl-dot">2</div>
+            <div class="kyc-tl-lbl">Under<br/>Review</div>
+          </div>
+          <div class="kyc-tl-step">
+            <div class="kyc-tl-dot">3</div>
+            <div class="kyc-tl-lbl">Adviser<br/>Assigned</div>
+          </div>
+          <div class="kyc-tl-step">
+            <div class="kyc-tl-dot">4</div>
+            <div class="kyc-tl-lbl">Full<br/>Access</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+          <a href="dashboard.html" class="btn btn-gold btn-lg">Go to My Dashboard →</a>
+          <a href="index.html"     class="btn btn-white btn-lg">Browse Properties</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer style="background:var(--midnight-deep);border-top:1px solid var(--glass-border);padding:20px 0;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <span style="font-size:.78rem;color:rgba(255,255,255,.3);">© 2026 PreLead Properties Nigeria Limited. FETCAN Licensed.</span>
+    <span style="font-size:.78rem;color:rgba(255,255,255,.3);">🔒 AES-256 Encrypted · NDPR Compliant</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js"></script>
+<script src="js/supabase.js"></script>
+<script>
+let currentSec = 4;
+const kycData2  = {};
+const prefSelected = new Set();
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await SupabaseAuth.requireAuth('login.html');
+  updateProgress(60);
+  loadReview();
+
+  // Drag and drop POF
+  const zone = document.getElementById('zone-pof');
+  if (zone) {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      const file = e.dataTransfer?.files[0];
+      if (!file) return;
+      const input = document.getElementById('filePof');
+      const dt = new DataTransfer(); dt.items.add(file);
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    });
+  }
+});
+
+function loadReview() {
+  try {
+    const kyc = JSON.parse(localStorage.getItem('prelead_kyc') || '{}');
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    set('rv-name', [kyc.first_name, kyc.last_name].filter(Boolean).join(' ') || '—');
+    set('rv-dob',  kyc.date_of_birth || '—');
+    set('rv-nat',  kyc.nationality || '—');
+    set('rv-occ',  kyc.occupation || '—');
+    set('rv-state', kyc.residential_state || '—');
+    set('rv-city',  kyc.residential_city || '—');
+    set('rv-housing', kyc.housing_status || '—');
+    set('rv-idtype', kyc.id_type || '—');
+    set('rv-idnum',  kyc.id_number ? kyc.id_number.slice(0,3) + '****' + kyc.id_number.slice(-2) : '—');
+  } catch(e) {}
+}
+
+function updateProgress(pct) {
+  document.getElementById('kycProgress').style.width = pct + '%';
+  document.getElementById('kycPct').textContent = pct + '%';
+}
+
+function nextToReview() {
+  const form   = document.getElementById('kycForm4');
+  const result = FormValidator.validate(form);
+  if (!result.isValid) { FormValidator.showErrors(form, result.errors); return; }
+  new FormData(form).forEach((v, k) => { kycData2[k] = v; });
+
+  // Update live review fields
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+  s('rv-emp',    kycData2.employmentType);
+  s('rv-income', kycData2.annualIncome);
+  s('rv-budget', kycData2.budgetRange || '—');
+
+  document.getElementById('kyc-s-4').classList.remove('active');
+  currentSec = 5;
+  document.getElementById('kyc-s-5').classList.add('active');
+
+  // Step 5 indicator
+  const dot5 = document.getElementById('kdot-5');
+  if (dot5) { dot5.className = 'kyc-step-item-dot active'; }
+  const stepTab5 = document.getElementById('step-tab-5');
+  if (stepTab5) { stepTab5.style.opacity = '1'; stepTab5.classList.add('active'); }
+  document.getElementById('conn-4')?.classList.add('done');
+
+  updateProgress(80);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function submitKyc() {
+  if (!document.getElementById('kycConsent').checked) {
+    window._toast.show('Please confirm your consent to submit.', 'error');
+    return;
+  }
+  const form   = document.getElementById('kycForm5');
+  const fd     = new FormData(form);
+  fd.forEach((v, k) => { kycData2[k] = v; });
+  kycData2.propertyInterests = [...prefSelected].join(',');
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting…';
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  try {
+    const existing = JSON.parse(localStorage.getItem('prelead_kyc') || '{}');
+    await KYCService.save({
+      ...existing,
+      employment_type:      kycData2.employmentType      || null,
+      employer_name:        kycData2.employerName        || null,
+      annual_income:        kycData2.annualIncome        || null,
+      source_of_funds:      kycData2.sourceOfFunds       || null,
+      budget_range:         kycData2.budgetRange         || null,
+      payment_preference:   kycData2.paymentPref        || null,
+      investment_purpose:   kycData2.investmentPurpose   || null,
+      property_interests:   kycData2.propertyInterests   || null,
+      proof_of_funds_url:   kycData2._pofUrl             || null,
+      status:               'under_review',
+    });
+    updateProgress(100);
+    document.getElementById('kyc-s-5').classList.remove('active');
+    document.getElementById('kyc-s-success').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window._toast.show('Verification submitted successfully!', 'success', 6000);
+  } catch(e) {
+    window._toast.show('Submission failed: ' + e.message, 'error');
+    btn.textContent = 'Submit for Verification';
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  }
+}
+
+function togglePref(card, type) {
+  card.classList.toggle('selected');
+  if (card.classList.contains('selected')) prefSelected.add(type);
+  else prefSelected.delete(type);
+}
+function selectBudget(card, val) {
+  document.querySelectorAll('#budgetGrid .doc-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  kycData2.budgetRange = val;
+}
+
+async function handleUpload(input, zoneId, prevId, folder, urlKey) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { window._toast.show('File too large — max 5MB.', 'error'); return; }
+  const zone = document.getElementById(zoneId);
+  const prev = document.getElementById(prevId);
+  zone.classList.add('uploaded'); prev.style.display = 'flex';
+  prev.innerHTML = '⏳ Uploading ' + file.name + '…';
+  try {
+    const url = await KYCService.uploadFile(file, folder);
+    kycData2[urlKey] = url;
+    prev.innerHTML = '✓ ' + file.name;
+    window._toast.show(file.name + ' uploaded.', 'success');
+  } catch(err) {
+    kycData2[urlKey] = null;
+    prev.innerHTML = '✓ ' + file.name + ' (noted)';
+  }
+}
+</script>
+</body>
+</html>

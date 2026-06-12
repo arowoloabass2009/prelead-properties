@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Identity Verification · Step 1 — PreLead Properties</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/kyc.css"/>
+</head>
+<body class="kyc-root">
+
+<!-- ═══════════════ NAVBAR ════════════════════════════════ -->
+<nav class="navbar light" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo-mark">🏛</div>
+      <div class="navbar-wordmark">
+        <span class="navbar-wordmark-primary" style="color:var(--midnight);">PreLead Properties</span>
+        <span class="navbar-wordmark-sub">Identity Verification</span>
+      </div>
+    </a>
+    <div style="margin:0 auto;"></div>
+    <div class="navbar-actions">
+      <a href="kyc2.html" class="btn btn-dark btn-sm">Step 2 →</a>
+      <button class="btn btn-danger btn-sm" onclick="SupabaseAuth.signOut()">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ KYC PAGE HEADER ══════════════════════ -->
+<div class="kyc-page-header">
+  <div class="container kyc-page-header-inner">
+    <div>
+      <span class="badge badge-gold mb-12">Step 1 of 2 — Personal Profile &amp; Identity</span>
+      <h1>Account Verification</h1>
+      <p class="lead mt-8">
+        Complete your identity profile to unlock full access — property enquiries, payment plans,
+        developer contact and your personalised investment dashboard.
+      </p>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="container" style="margin-top:28px;">
+    <div class="kyc-stepper">
+      <div class="kyc-step active" id="step-tab-1">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot active" id="sdot-1">1</div>
+          <div class="kyc-step-label">Personal</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-1"></div>
+      <div class="kyc-step" id="step-tab-2">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot" id="sdot-2">2</div>
+          <div class="kyc-step-label">Address</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-2"></div>
+      <div class="kyc-step" id="step-tab-3">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot" id="sdot-3">3</div>
+          <div class="kyc-step-label">Identity Doc</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-3"></div>
+      <div class="kyc-step" id="step-tab-4" style="opacity:.45;">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot" id="sdot-4">4</div>
+          <div class="kyc-step-label">Financial</div>
+        </div>
+      </div>
+      <div class="kyc-step-connector" id="conn-4" style="opacity:.45;"></div>
+      <div class="kyc-step" id="step-tab-5" style="opacity:.45;">
+        <div class="kyc-step-node">
+          <div class="kyc-step-dot" id="sdot-5">5</div>
+          <div class="kyc-step-label">Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ KYC LAYOUT ════════════════════════════ -->
+<div class="kyc-layout container">
+
+  <!-- Sidebar -->
+  <aside class="kyc-sidebar">
+    <div class="kyc-progress-card">
+      <h3>Verification Progress</h3>
+      <div class="kyc-overall-row">
+        <div class="progress-track progress-track-dark" style="flex:1;">
+          <div class="progress-fill" id="kycProgress" style="width:0%;"></div>
+        </div>
+        <span class="kyc-pct" id="kycPct">0%</span>
+      </div>
+      <div class="kyc-steps-list">
+        <div class="kyc-step-item" onclick="goToSection(1)">
+          <div class="kyc-step-item-dot active" id="kdot-1">1</div>
+          <div>
+            <div class="kyc-step-item-title">Personal Details</div>
+            <div class="kyc-step-item-sub">Name, DOB, contact info</div>
+          </div>
+        </div>
+        <div class="kyc-step-item" onclick="goToSection(2)">
+          <div class="kyc-step-item-dot pending" id="kdot-2">2</div>
+          <div>
+            <div class="kyc-step-item-title">Residential Address</div>
+            <div class="kyc-step-item-sub">Address, city, state</div>
+          </div>
+        </div>
+        <div class="kyc-step-item" onclick="goToSection(3)">
+          <div class="kyc-step-item-dot pending" id="kdot-3">3</div>
+          <div>
+            <div class="kyc-step-item-title">Identity Document</div>
+            <div class="kyc-step-item-sub">Government-issued ID</div>
+          </div>
+        </div>
+        <div class="kyc-step-item" style="opacity:.45;pointer-events:none;">
+          <div class="kyc-step-item-dot pending">4</div>
+          <div>
+            <div class="kyc-step-item-title">Financial Profile</div>
+            <div class="kyc-step-item-sub">Income &amp; investment capacity</div>
+          </div>
+        </div>
+        <div class="kyc-step-item" style="opacity:.45;pointer-events:none;">
+          <div class="kyc-step-item-dot pending">5</div>
+          <div>
+            <div class="kyc-step-item-title">Review &amp; Submit</div>
+            <div class="kyc-step-item-sub">Confirm and activate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kyc-info-card">
+      <h4>🏛 Why Verify?</h4>
+      <p>KYC verification unlocks instalment payment plans, direct developer contact,
+        priority viewing slots and your personalised property investment dashboard.
+        Your data is encrypted with AES-256 and never shared without consent.</p>
+      <div class="kyc-trust-badges">
+        <span class="kyc-trust-badge">🔒 AES-256 Encrypted</span>
+        <span class="kyc-trust-badge">📜 NDPR Compliant</span>
+        <span class="kyc-trust-badge">✅ FETCAN Licensed</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="kyc-main">
+
+    <!-- ─── Section 1: Personal Details ─── -->
+    <div class="kyc-section active" id="kyc-s-1">
+      <div class="kyc-section-header">
+        <div class="kyc-section-num">01</div>
+        <div>
+          <h2>Personal Details</h2>
+          <p>Your full legal name, date of birth, gender and contact information as they appear on your government-issued ID.</p>
+        </div>
+      </div>
+      <div class="kyc-form-card">
+        <form id="kycForm1" novalidate>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">First Name <span class="req">*</span></label>
+              <input type="text" name="kycFirst" class="form-control"
+                placeholder="As on your ID"
+                data-validate="required" data-label="First Name"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <span class="req">*</span></label>
+              <input type="text" name="kycLast" class="form-control"
+                placeholder="As on your ID"
+                data-validate="required" data-label="Last Name"/>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Middle Name</label>
+              <input type="text" name="kycMiddle" class="form-control" placeholder="Optional"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth <span class="req">*</span></label>
+              <input type="date" name="kycDob" class="form-control"
+                data-validate="required" data-label="Date of Birth"/>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select name="kycGender" class="form-control form-select">
+                <option value="">Prefer not to say</option>
+                <option>Male</option><option>Female</option><option>Non-binary</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nationality <span class="req">*</span></label>
+              <select name="kycNationality" class="form-control form-select" data-validate="required" data-label="Nationality">
+                <option value="">Select…</option>
+                <option selected>Nigerian</option>
+                <option>Ghanaian</option><option>Beninese</option>
+                <option>British</option><option>American</option>
+                <option>Canadian</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="req">*</span></label>
+              <input type="tel" name="kycPhone" class="form-control"
+                placeholder="080 0000 0000"
+                data-validate="required" data-label="Phone Number"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State of Origin <span class="req">*</span></label>
+              <select name="kycStateOrigin" class="form-control form-select" data-validate="required" data-label="State of Origin">
+                <option value="">Select state…</option>
+                <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option>
+                <option>Anambra</option><option>Bauchi</option><option>Bayelsa</option>
+                <option>Benue</option><option>Borno</option><option>Cross River</option>
+                <option>Delta</option><option>Ebonyi</option><option>Edo</option>
+                <option>Ekiti</option><option>Enugu</option><option>FCT – Abuja</option>
+                <option>Gombe</option><option>Imo</option><option>Jigawa</option>
+                <option>Kaduna</option><option>Kano</option><option>Katsina</option>
+                <option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+                <option>Lagos</option><option>Nasarawa</option><option>Niger</option>
+                <option>Ogun</option><option>Ondo</option><option>Osun</option>
+                <option>Oyo</option><option>Plateau</option><option>Rivers</option>
+                <option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+                <option>Zamfara</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Occupation / Job Title <span class="req">*</span></label>
+            <input type="text" name="kycOccupation" class="form-control"
+              placeholder="e.g. Civil Engineer, Business Owner, Retired Officer"
+              data-validate="required" data-label="Occupation"/>
+          </div>
+          <div class="kyc-nav">
+            <span></span>
+            <button type="button" class="btn btn-gold" onclick="nextSection(1)">
+              Save &amp; Continue →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── Section 2: Residential Address ─── -->
+    <div class="kyc-section" id="kyc-s-2">
+      <div class="kyc-section-header">
+        <div class="kyc-section-num">02</div>
+        <div>
+          <h2>Residential Address</h2>
+          <p>Your current address of residence. This helps us match you to relevant listings, assign area advisers, and process property documents accurately.</p>
+        </div>
+      </div>
+      <div class="kyc-form-card">
+        <form id="kycForm2" novalidate>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">State of Residence <span class="req">*</span></label>
+              <select name="resState" class="form-control form-select" data-validate="required" data-label="State">
+                <option value="">Select state…</option>
+                <option>Lagos</option><option>FCT – Abuja</option><option>Rivers</option>
+                <option>Ogun</option><option>Oyo</option><option>Kano</option>
+                <option>Delta</option><option>Enugu</option><option>Anambra</option>
+                <option>Edo</option><option>Imo</option><option>Abia</option>
+                <option>Adamawa</option><option>Akwa Ibom</option><option>Bauchi</option>
+                <option>Bayelsa</option><option>Benue</option><option>Borno</option>
+                <option>Cross River</option><option>Ebonyi</option><option>Ekiti</option>
+                <option>Gombe</option><option>Jigawa</option><option>Kaduna</option>
+                <option>Katsina</option><option>Kebbi</option><option>Kogi</option>
+                <option>Kwara</option><option>Nasarawa</option><option>Niger</option>
+                <option>Ondo</option><option>Osun</option><option>Plateau</option>
+                <option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+                <option>Zamfara</option><option>Outside Nigeria (Diaspora)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">City / LGA <span class="req">*</span></label>
+              <input type="text" name="resCity" class="form-control"
+                placeholder="e.g. Lekki, Maitama, GRA Phase 2"
+                data-validate="required" data-label="City"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Street Address <span class="req">*</span></label>
+            <textarea name="resAddress" class="form-control" rows="3"
+              placeholder="House number, street name, estate, area, city…"
+              data-validate="required" data-label="Address"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Nearest Landmark</label>
+              <input type="text" name="resLandmark" class="form-control"
+                placeholder="e.g. Opposite Shoprite, After Zenith Bank"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Postal / ZIP Code</label>
+              <input type="text" name="resPostal" class="form-control"
+                placeholder="e.g. 100001"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current Housing Status <span class="req">*</span></label>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px;">
+              <label class="doc-card" onclick="selectStatus(this,'own')">
+                <input type="radio" name="housingStatus" value="own"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🏠</div>
+                  <div class="doc-card-label">Own</div>
+                  <div class="doc-card-sub">I own my home</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectStatus(this,'rent')">
+                <input type="radio" name="housingStatus" value="rent"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🔑</div>
+                  <div class="doc-card-label">Rent</div>
+                  <div class="doc-card-sub">Renting now</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectStatus(this,'family')">
+                <input type="radio" name="housingStatus" value="family"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">👨‍👩‍👦</div>
+                  <div class="doc-card-label">Family</div>
+                  <div class="doc-card-sub">Family house</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectStatus(this,'diaspora')">
+                <input type="radio" name="housingStatus" value="diaspora"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">✈️</div>
+                  <div class="doc-card-label">Abroad</div>
+                  <div class="doc-card-sub">Diaspora buyer</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="kyc-nav">
+            <button type="button" class="btn btn-white" onclick="prevSection(2)">← Back</button>
+            <button type="button" class="btn btn-gold" onclick="nextSection(2)">Save &amp; Continue →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── Section 3: Identity Document ─── -->
+    <div class="kyc-section" id="kyc-s-3">
+      <div class="kyc-section-header">
+        <div class="kyc-section-num">03</div>
+        <div>
+          <h2>Identity Document</h2>
+          <p>Upload a valid government-issued photo ID. Required to enable payment plans, developer contact and large-value transactions. Max 5MB per file.</p>
+        </div>
+      </div>
+      <div class="kyc-form-card">
+        <form id="kycForm3" novalidate>
+          <div class="form-group">
+            <label class="form-label">Document Type <span class="req">*</span></label>
+            <div class="doc-type-grid">
+              <label class="doc-card" onclick="selectDocType(this,'nin')">
+                <input type="radio" name="idType" value="nin"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🪪</div>
+                  <div class="doc-card-label">NIN Slip</div>
+                  <div class="doc-card-sub">National ID</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectDocType(this,'passport')">
+                <input type="radio" name="idType" value="passport"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">📘</div>
+                  <div class="doc-card-label">Passport</div>
+                  <div class="doc-card-sub">International</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectDocType(this,'drivers')">
+                <input type="radio" name="idType" value="drivers"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🚗</div>
+                  <div class="doc-card-label">Driver's Licence</div>
+                  <div class="doc-card-sub">FRSC Issued</div>
+                </div>
+              </label>
+              <label class="doc-card" onclick="selectDocType(this,'voters')">
+                <input type="radio" name="idType" value="voters"/>
+                <div class="doc-card-inner">
+                  <div class="doc-card-icon">🗳️</div>
+                  <div class="doc-card-label">Voter's Card</div>
+                  <div class="doc-card-sub">INEC Issued</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Document Number <span class="req">*</span></label>
+            <input type="text" name="idNumber" class="form-control"
+              placeholder="e.g. 12345678901 or A12345678"
+              data-validate="required" data-label="Document Number"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Upload — Front Page <span class="req">*</span></label>
+            <div class="upload-zone" id="zone-front" onclick="document.getElementById('fileFront').click()">
+              <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+              <p><strong>Click to upload</strong> or drag &amp; drop</p>
+              <small>JPG, PNG, PDF — Max 5MB</small>
+              <div id="prev-front" class="upload-file-name" style="display:none;"></div>
+            </div>
+            <input type="file" id="fileFront" name="idFront" accept=".jpg,.jpeg,.png,.pdf"
+              style="display:none;"
+              onchange="handleUpload(this,'zone-front','prev-front','id-front','_idFrontUrl')"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Upload — Back Page <span class="req" title="optional">&#40;optional&#41;</span></label>
+            <div class="upload-zone" id="zone-back" onclick="document.getElementById('fileBack').click()">
+              <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+              <p><strong>Click to upload</strong> or drag &amp; drop</p>
+              <small>JPG, PNG, PDF — Max 5MB</small>
+              <div id="prev-back" class="upload-file-name" style="display:none;"></div>
+            </div>
+            <input type="file" id="fileBack" name="idBack" accept=".jpg,.jpeg,.png,.pdf"
+              style="display:none;"
+              onchange="handleUpload(this,'zone-back','prev-back','id-back','_idBackUrl')"/>
+          </div>
+
+          <div class="kyc-nav">
+            <button type="button" class="btn btn-white" onclick="prevSection(3)">← Back</button>
+            <button type="button" class="btn btn-gold" onclick="saveAndNext()">
+              Save &amp; Go to Step 2 →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /kyc-layout -->
+
+<footer style="background:var(--midnight-deep);border-top:1px solid var(--glass-border);padding:20px 0;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <span style="font-size:.78rem;color:rgba(255,255,255,.3);">© 2026 PreLead Properties Nigeria Limited. FETCAN Licensed.</span>
+    <span style="font-size:.78rem;color:rgba(255,255,255,.3);">🔒 AES-256 Encrypted · NDPR Compliant</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js"></script>
+<script src="js/supabase.js"></script>
+<script>
+let currentSec = 1;
+const TOTAL_SEC = 3;
+const kycData   = {};
+
+const SECTION_WEIGHTS = { 1: 20, 2: 20, 3: 20 };
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await SupabaseAuth.requireAuth('login.html');
+  try {
+    const existing = await KYCService.getMine();
+    if (existing) {
+      const sv = (n, v) => { const el = document.querySelector('[name="' + n + '"]'); if (el && v) el.value = v; };
+      sv('kycFirst', existing.first_name); sv('kycLast', existing.last_name);
+      sv('kycMiddle', existing.middle_name); sv('kycDob', existing.date_of_birth);
+      sv('kycNationality', existing.nationality); sv('kycStateOrigin', existing.state_of_origin);
+      sv('kycPhone', existing.phone); sv('kycOccupation', existing.occupation);
+      sv('idNumber', existing.id_number);
+      if (existing.status === 'under_review' || existing.status === 'verified') {
+        window.location.href = 'kyc2.html';
+      }
+    }
+  } catch(e) {}
+  updateProgress(0);
+
+  // Drag-and-drop
+  ['zone-front','zone-back'].forEach(id => {
+    const zone = document.getElementById(id);
+    if (!zone) return;
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      const file = e.dataTransfer?.files[0];
+      if (!file) return;
+      const inputId = id === 'zone-front' ? 'fileFront' : 'fileBack';
+      const input   = document.getElementById(inputId);
+      const dt = new DataTransfer(); dt.items.add(file);
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    });
+  });
+});
+
+function updateProgress(bonus) {
+  const base = ((currentSec - 1) / 5) * 100;
+  const pct  = Math.min(Math.round(base + (bonus || 0)), 100);
+  document.getElementById('kycProgress').style.width = pct + '%';
+  document.getElementById('kycPct').textContent = pct + '%';
+  for (let i = 1; i <= TOTAL_SEC; i++) {
+    const dot = document.getElementById('kdot-' + i);
+    if (!dot) continue;
+    if (i < currentSec)        { dot.className = 'kyc-step-item-dot done'; dot.textContent = '✓'; }
+    else if (i === currentSec) { dot.className = 'kyc-step-item-dot active'; dot.textContent = i; }
+    else                       { dot.className = 'kyc-step-item-dot pending'; dot.textContent = i; }
+  }
+}
+
+function goToSection(n) {
+  if (n >= currentSec) return;
+  document.getElementById('kyc-s-' + currentSec).classList.remove('active');
+  currentSec = n;
+  document.getElementById('kyc-s-' + n).classList.add('active');
+  updateProgress(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextSection(current) {
+  const form   = document.getElementById('kycForm' + current);
+  const result = FormValidator.validate(form);
+  if (!result.isValid) { FormValidator.showErrors(form, result.errors); return; }
+  new FormData(form).forEach((v, k) => { kycData[k] = v; });
+  autoSave();
+  document.getElementById('kyc-s-' + current).classList.remove('active');
+  currentSec = current + 1;
+  document.getElementById('kyc-s-' + currentSec).classList.add('active');
+  updateProgress(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevSection(current) {
+  document.getElementById('kyc-s-' + current).classList.remove('active');
+  currentSec = current - 1;
+  document.getElementById('kyc-s-' + currentSec).classList.add('active');
+  updateProgress(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveAndNext() {
+  const form   = document.getElementById('kycForm3');
+  const result = FormValidator.validate(form);
+  if (!result.isValid) { FormValidator.showErrors(form, result.errors); return; }
+  new FormData(form).forEach((v, k) => { kycData[k] = v; });
+  try {
+    await KYCService.save(buildPayload());
+    window._toast.show('Progress saved! Continuing to Step 2…', 'success');
+    setTimeout(() => { window.location.href = 'kyc2.html'; }, 1200);
+  } catch(e) {
+    window._toast.show('Could not save. Trying to continue…', 'warning');
+    setTimeout(() => { window.location.href = 'kyc2.html'; }, 1000);
+  }
+}
+
+function autoSave() {
+  KYCService.save(buildPayload()).catch(e => console.warn('Auto-save:', e.message));
+}
+
+function buildPayload() {
+  return {
+    first_name:         kycData.kycFirst        || null,
+    middle_name:        kycData.kycMiddle        || null,
+    last_name:          kycData.kycLast          || null,
+    date_of_birth:      kycData.kycDob           || null,
+    gender:             kycData.kycGender        || null,
+    nationality:        kycData.kycNationality   || null,
+    state_of_origin:    kycData.kycStateOrigin   || null,
+    phone:              kycData.kycPhone         || null,
+    occupation:         kycData.kycOccupation    || null,
+    residential_state:  kycData.resState         || null,
+    residential_city:   kycData.resCity          || null,
+    residential_address:kycData.resAddress       || null,
+    residential_landmark:kycData.resLandmark     || null,
+    postal_code:        kycData.resPostal        || null,
+    housing_status:     kycData.housingStatus    || null,
+    id_type:            kycData.idType           || null,
+    id_number:          kycData.idNumber         || null,
+    id_front_url:       kycData._idFrontUrl      || null,
+    id_back_url:        kycData._idBackUrl       || null,
+    status:             'draft',
+  };
+}
+
+async function handleUpload(input, zoneId, prevId, folder, urlKey) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { window._toast.show('File too large — max 5MB.', 'error'); return; }
+  const zone = document.getElementById(zoneId);
+  const prev = document.getElementById(prevId);
+  zone.classList.add('uploaded'); prev.style.display = 'flex';
+  prev.innerHTML = '⏳ Uploading ' + file.name + '…';
+  try {
+    const url = await KYCService.uploadFile(file, folder);
+    kycData[urlKey] = url;
+    prev.innerHTML = '✓ ' + file.name;
+    window._toast.show(file.name + ' uploaded successfully.', 'success');
+  } catch(err) {
+    kycData[urlKey] = null;
+    prev.innerHTML = '✓ ' + file.name + ' (noted locally)';
+  }
+}
+
+function selectDocType(card, type) {
+  document.querySelectorAll('.doc-type-grid .doc-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  kycData.idType = type;
+}
+
+function selectStatus(card, status) {
+  document.querySelectorAll('[onclick^="selectStatus"]').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  kycData.housingStatus = status;
+}
+</script>
+</body>
+</html>

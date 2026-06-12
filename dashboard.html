@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Dashboard — PreLead Properties</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+</head>
+<body>
+<div class="dashboard-root">
+
+  <!-- ═══════════════ SIDEBAR ══════════════════════════════ -->
+  <aside class="dash-sidebar" id="dashSidebar">
+
+    <div class="dash-brand">
+      <div class="dash-brand-logo">🏛</div>
+      <div>
+        <div class="dash-brand-name">PreLead</div>
+        <div class="dash-brand-sub">Properties</div>
+      </div>
+    </div>
+
+    <nav class="dash-nav">
+      <div class="dash-nav-section">
+        <div class="dash-nav-heading">Overview</div>
+        <a href="#" class="dash-nav-item active" onclick="showPanel('overview',this)">
+          <span class="dash-nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('saved',this)">
+          <span class="dash-nav-icon">❤️</span> Saved Properties
+          <span class="dash-nav-badge" id="savedBadge">0</span>
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('enquiries',this)">
+          <span class="dash-nav-icon">📩</span> My Enquiries
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('viewings',this)">
+          <span class="dash-nav-icon">📅</span> Viewings
+        </a>
+      </div>
+      <div class="dash-nav-section">
+        <div class="dash-nav-heading">Investment</div>
+        <a href="#" class="dash-nav-item" onclick="showPanel('portfolio',this)">
+          <span class="dash-nav-icon">📈</span> Portfolio
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('payments',this)">
+          <span class="dash-nav-icon">💳</span> Payments
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('documents',this)">
+          <span class="dash-nav-icon">📁</span> Documents
+        </a>
+      </div>
+      <div class="dash-nav-section">
+        <div class="dash-nav-heading">Account</div>
+        <a href="kyc1.html" class="dash-nav-item">
+          <span class="dash-nav-icon">🪪</span> Verification
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('alerts',this)">
+          <span class="dash-nav-icon">🔔</span> Property Alerts
+          <span class="dash-nav-badge" style="background:var(--rose);">3</span>
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showPanel('settings',this)">
+          <span class="dash-nav-icon">⚙️</span> Settings
+        </a>
+        <a href="index.html" class="dash-nav-item">
+          <span class="dash-nav-icon">🌐</span> Browse Listings
+        </a>
+      </div>
+    </nav>
+
+    <div class="dash-sidebar-user">
+      <div class="dash-user-card">
+        <div class="dash-avatar" id="dashAvatar">U</div>
+        <div>
+          <div class="dash-user-name" id="dashUserName">Loading…</div>
+          <div class="dash-user-role" id="dashUserRole">Buyer</div>
+        </div>
+        <button class="dash-sign-out" onclick="SupabaseAuth.signOut()" title="Sign Out">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════ MAIN ═══════════════════════════════ -->
+  <main class="dash-main">
+
+    <!-- Top bar -->
+    <header class="dash-topbar">
+      <div class="dash-topbar-left">
+        <h1 id="topbarTitle">My Dashboard</h1>
+        <p id="topbarSub">Welcome back · <span id="topbarDate"></span></p>
+      </div>
+      <div class="dash-topbar-right">
+        <div class="dash-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--slate-400)"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search properties…"/>
+        </div>
+        <div class="dash-notif-btn" title="Notifications">
+          🔔
+          <div class="notif-dot"></div>
+        </div>
+        <div class="dash-avatar" style="width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:.9rem;" id="topbarAvatar">U</div>
+      </div>
+    </header>
+
+    <!-- ───── CONTENT PANELS ────────────────────────────── -->
+    <div class="dash-content">
+
+      <!-- Overview Panel -->
+      <div id="panel-overview">
+
+        <!-- KYC Banner (shown if not verified) -->
+        <div id="kycBanner" style="background:linear-gradient(135deg,var(--charcoal-2),var(--charcoal));border:1px solid var(--glass-border-2);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="font-size:1.6rem;">🪪</div>
+            <div>
+              <div style="font-weight:700;color:#fff;margin-bottom:2px;">Complete Your Verification</div>
+              <div style="font-size:.82rem;color:var(--text-mid);">Unlock payment plans, developer contact and priority viewing by completing your KYC.</div>
+            </div>
+          </div>
+          <a href="kyc1.html" class="btn btn-gold btn-sm">Complete Now →</a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="dash-stats">
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">❤️</div>
+            <div class="dash-stat-val" id="statSaved">0</div>
+            <div class="dash-stat-label">Saved Properties</div>
+            <div class="dash-stat-change up">↑ 2 this week</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">📩</div>
+            <div class="dash-stat-val">3</div>
+            <div class="dash-stat-label">Active Enquiries</div>
+            <div class="dash-stat-change up">↑ 1 new reply</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">📅</div>
+            <div class="dash-stat-val">1</div>
+            <div class="dash-stat-label">Upcoming Viewing</div>
+            <div class="dash-stat-change" style="color:var(--gold);">Tomorrow, 2PM</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">🔔</div>
+            <div class="dash-stat-val">3</div>
+            <div class="dash-stat-label">Property Alerts</div>
+            <div class="dash-stat-change up">↑ 3 new matches</div>
+          </div>
+        </div>
+
+        <!-- Recommended properties + activity -->
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;">
+
+          <!-- Recommended -->
+          <div class="dash-panel">
+            <div class="dash-panel-head">
+              <h3>Recommended For You</h3>
+              <a href="index.html" class="btn btn-outline-gold btn-sm">View All</a>
+            </div>
+            <div class="dash-panel-body">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+
+                <div style="display:flex;gap:14px;align-items:center;padding:14px;border-radius:var(--r-md);background:var(--bg-alt);border:1px solid var(--border-light);transition:all .2s;cursor:pointer;" onmouseenter="this.style.boxShadow='var(--sh-md)'" onmouseleave="this.style.boxShadow=''">
+                  <div style="width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--charcoal),var(--midnight));display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">🏠</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;">Domestic · Asokoro</div>
+                    <div style="font-family:var(--font-serif);font-size:.95rem;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">5-Bed Detached Duplex</div>
+                    <div style="font-size:.8rem;color:var(--text-soft);">📍 Asokoro, FCT · 480 sqm</div>
+                  </div>
+                  <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-family:var(--font-serif);font-weight:700;color:var(--midnight);font-size:.95rem;">₦45M</div>
+                    <span class="badge badge-gold" style="font-size:.65rem;margin-top:4px;">Featured</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:14px;align-items:center;padding:14px;border-radius:var(--r-md);background:var(--bg-alt);border:1px solid var(--border-light);transition:all .2s;cursor:pointer;" onmouseenter="this.style.boxShadow='var(--sh-md)'" onmouseleave="this.style.boxShadow=''">
+                  <div style="width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,#001a0d,#003320);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">🏬</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;">Plaza · Abuja</div>
+                    <div style="font-family:var(--font-serif);font-size:.95rem;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Emerald Plaza · Wuse 2</div>
+                    <div style="font-size:.8rem;color:var(--text-soft);">📍 Wuse 2, FCT · 64 units</div>
+                  </div>
+                  <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-family:var(--font-serif);font-weight:700;color:var(--midnight);font-size:.95rem;">₦210M</div>
+                    <span class="badge badge-sky" style="font-size:.65rem;margin-top:4px;">Off-Plan</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:14px;align-items:center;padding:14px;border-radius:var(--r-md);background:var(--bg-alt);border:1px solid var(--border-light);transition:all .2s;cursor:pointer;" onmouseenter="this.style.boxShadow='var(--sh-md)'" onmouseleave="this.style.boxShadow=''">
+                  <div style="width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,#001020,#002040);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">🌊</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;">Mooreland · Lagos</div>
+                    <div style="font-family:var(--font-serif);font-size:.95rem;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Azure Moor Waterfront Estate</div>
+                    <div style="font-size:.8rem;color:var(--text-soft);">📍 Banana Island · 24 units</div>
+                  </div>
+                  <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-family:var(--font-serif);font-weight:700;color:var(--midnight);font-size:.95rem;">₦520M</div>
+                    <span class="badge badge-emerald" style="font-size:.65rem;margin-top:4px;">New</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity feed -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+
+            <!-- KYC Status -->
+            <div class="dash-panel">
+              <div class="dash-panel-head">
+                <h3>Verification Status</h3>
+              </div>
+              <div class="dash-panel-body" style="padding:20px;">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">Personal Details</span>
+                    <span class="badge badge-emerald" style="font-size:.65rem;">✓ Done</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">Address Verified</span>
+                    <span class="badge badge-emerald" style="font-size:.65rem;">✓ Done</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">Identity Document</span>
+                    <span class="badge badge-amber" style="font-size:.65rem;">⏳ Pending</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">Financial Profile</span>
+                    <span class="badge badge-light" style="font-size:.65rem;">— Not Started</span>
+                  </div>
+                </div>
+                <div class="progress-track mt-16" style="margin-bottom:8px;">
+                  <div class="progress-fill" style="width:50%;"></div>
+                </div>
+                <div style="font-size:.74rem;color:var(--text-soft);">50% complete</div>
+              </div>
+            </div>
+
+            <!-- Market Snapshot -->
+            <div class="dash-panel">
+              <div class="dash-panel-head">
+                <h3>Market Today</h3>
+              </div>
+              <div class="dash-panel-body" style="padding:20px;">
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">🏠 Domestic Avg.</span>
+                    <span style="font-weight:700;color:var(--midnight);">₦38.4M</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">🏢 Commercial Avg.</span>
+                    <span style="font-weight:700;color:var(--midnight);">₦284M</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">🌊 Moor Avg.</span>
+                    <span style="font-weight:700;color:var(--midnight);">₦412M</span>
+                  </div>
+                  <div style="height:1px;background:var(--border-light);"></div>
+                  <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+                    <span style="color:var(--text-soft);">New Listings Today</span>
+                    <span style="font-weight:700;color:var(--emerald);">+24</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /panel-overview -->
+
+      <!-- Placeholder Panels -->
+      <div id="panel-saved"      style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Saved Properties</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">❤️</div>
+            <div style="font-weight:700;margin-bottom:8px;">No saved properties yet</div>
+            <p style="font-size:.88rem;margin-bottom:20px;">Browse listings and tap the heart icon to save properties here.</p>
+            <a href="index.html" class="btn btn-gold">Browse Properties</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-enquiries"  style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>My Enquiries</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">📩</div>
+            <div style="font-weight:700;margin-bottom:8px;">No enquiries yet</div>
+            <p style="font-size:.88rem;margin-bottom:20px;">When you enquire about a property, it'll appear here for tracking.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-viewings"   style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Property Viewings</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">📅</div>
+            <div style="font-weight:700;margin-bottom:8px;">No viewings scheduled</div>
+            <p style="font-size:.88rem;">Complete your KYC to unlock viewing booking.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-portfolio"  style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Investment Portfolio</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">📈</div>
+            <div style="font-weight:700;margin-bottom:8px;">Portfolio is empty</div>
+            <p style="font-size:.88rem;margin-bottom:20px;">Your acquired and invested properties will be tracked here.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-payments"   style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Payments</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">💳</div>
+            <div style="font-weight:700;margin-bottom:8px;">No payment history</div>
+            <p style="font-size:.88rem;">Payment records for your instalment plans will appear here.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-documents"  style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>My Documents</h3></div>
+          <div class="dash-panel-body" style="text-align:center;padding:48px;color:var(--text-soft);">
+            <div style="font-size:3rem;margin-bottom:12px;">📁</div>
+            <div style="font-weight:700;margin-bottom:8px;">No documents yet</div>
+            <p style="font-size:.88rem;">Title deeds, agreements and receipts will be stored here securely.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-alerts"     style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Property Alerts</h3></div>
+          <div class="dash-panel-body">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div style="padding:16px;background:var(--bg-alt);border:1px solid var(--border-light);border-radius:var(--r-md);">
+                <div style="font-size:.7rem;color:var(--gold);font-weight:700;margin-bottom:4px;">NEW MATCH</div>
+                <div style="font-weight:700;color:var(--midnight);margin-bottom:4px;">3-Bed Duplex, Lekki Phase 1 · ₦28M</div>
+                <div style="font-size:.8rem;color:var(--text-soft);">Matches your domestic budget filter · Listed 2 hours ago</div>
+              </div>
+              <div style="padding:16px;background:var(--bg-alt);border:1px solid var(--border-light);border-radius:var(--r-md);">
+                <div style="font-size:.7rem;color:var(--emerald);font-weight:700;margin-bottom:4px;">PRICE DROP</div>
+                <div style="font-weight:700;color:var(--midnight);margin-bottom:4px;">Emerald Plaza, Wuse 2 · ₦210M → ₦195M</div>
+                <div style="font-size:.8rem;color:var(--text-soft);">Price dropped 7.1% on a property you viewed · 1 day ago</div>
+              </div>
+              <div style="padding:16px;background:var(--bg-alt);border:1px solid var(--border-light);border-radius:var(--r-md);">
+                <div style="font-size:.7rem;color:var(--sky);font-weight:700;margin-bottom:4px;">OFF-PLAN LAUNCH</div>
+                <div style="font-weight:700;color:var(--midnight);margin-bottom:4px;">Eko Atlantic Business Hub Phase 3 · From ₦380M</div>
+                <div style="font-size:.8rem;color:var(--text-soft);">New multinational complex matches your investment profile · 3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-settings"   style="display:none;">
+        <div class="dash-panel"><div class="dash-panel-head"><h3>Account Settings</h3></div>
+          <div class="dash-panel-body">
+            <div style="display:flex;flex-direction:column;gap:20px;max-width:480px;">
+              <div class="form-group">
+                <label class="form-label">Display Name</label>
+                <input type="text" class="form-control" id="settingsName" placeholder="Your name"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="settingsEmail" placeholder="your@email.com" disabled style="opacity:.6;"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notification Preferences</label>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
+                  <label class="check-label"><input type="checkbox" checked/> <span>New listings matching my filters</span></label>
+                  <label class="check-label"><input type="checkbox" checked/> <span>Price drops on saved properties</span></label>
+                  <label class="check-label"><input type="checkbox" checked/> <span>Enquiry replies from developers</span></label>
+                  <label class="check-label"><input type="checkbox"/>         <span>Weekly market report</span></label>
+                </div>
+              </div>
+              <button class="btn btn-gold" onclick="window._toast.show('Settings saved.', 'success')">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dash-content -->
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js"></script>
+<script src="js/supabase.js"></script>
+<script>
+const panels = ['overview','saved','enquiries','viewings','portfolio','payments','documents','alerts','settings'];
+
+function showPanel(name, link) {
+  panels.forEach(p => {
+    const el = document.getElementById('panel-' + p);
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById('panel-' + name);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.dash-nav-item').forEach(el => el.classList.remove('active'));
+  if (link) link.classList.add('active');
+  const titleMap = {
+    overview:'My Dashboard', saved:'Saved Properties', enquiries:'My Enquiries',
+    viewings:'Viewings', portfolio:'Investment Portfolio', payments:'Payments',
+    documents:'Documents', alerts:'Property Alerts', settings:'Account Settings'
+  };
+  document.getElementById('topbarTitle').textContent = titleMap[name] || name;
+  return false;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Date
+  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-NG', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Saved count
+  const saved = WishlistManager?.getCount?.() ?? 0;
+  document.getElementById('statSaved').textContent = saved;
+  document.getElementById('savedBadge').textContent = saved;
+
+  try {
+    await SupabaseAuth.requireAuth('login.html');
+    const user = await SupabaseAuth.getUser();
+    if (user) {
+      const name = (user.user_metadata?.first_name || user.email?.split('@')[0] || 'User');
+      const role = (user.user_metadata?.role || 'buyer');
+      const initials = name.charAt(0).toUpperCase();
+      document.getElementById('dashUserName').textContent  = name + ' ' + (user.user_metadata?.last_name || '');
+      document.getElementById('dashUserRole').textContent  = role;
+      document.getElementById('dashAvatar').textContent    = initials;
+      document.getElementById('topbarAvatar').textContent  = initials;
+      document.getElementById('settingsName').value        = name;
+      document.getElementById('settingsEmail').value       = user.email || '';
+    }
+  } catch(e) {}
+});
+</script>
+</body>
+</html>
